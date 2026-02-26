@@ -4,11 +4,19 @@ Un pipeline de validación documental y antifraude robusto, modular y tolerante 
 
 ## 🧠 Arquitectura del Sistema: Un enfoque modular y resiliente
 
-El motor de validación documental que presentamos huye de los scripts lineales frágiles para apostar por una arquitectura modular tolerante a fallos, imitando entornos de producción bancaria. La entrada de datos pasa primero por una capa de **Anti-Spoofing y Auto-Crop dinámico**, diseñada para evitar la fragmentación de bordes típica de las cámaras móviles de alta resolución y aislar el documento de fondos ruidosos. 
+El motor de validación documental que presentamos huye de los scripts lineales frágiles para apostar por una arquitectura orquestada y tolerante a fallos, imitando entornos de producción críticos.
 
-Para la extracción de la MRZ, hemos elegido **PassportEye** porque integra algoritmos de detección de ROI (Región de Interés) específicos para estándares ICAO, lo que reduce drásticamente los falsos positivos en comparación con un motor OCR genérico como Doctr. 
+El pipeline se divide en los siguientes módulos core:
 
-A continuación, el corazón del sistema, nuestro **Módulo "Cirujano"**, procesa la MRZ aplicando heurísticas avanzadas para reparar alucinaciones típicas del motor OCR. Esto incluye máscaras bidireccionales para solucionar colisiones isomórficas (como confundir ceros con letras 'O'), auto-alineación de desbordamientos y filtros de limpieza de padding perimetral. Una vez la señal está recuperada y estabilizada, un enrutador criptográfico evalúa la norma ICAO TD1/TD3 y aplica reglas de negocio específicas, como el cálculo del Módulo 23 para el DNI español. Finalmente, la validación cruzada biométrica se ejecuta mediante un motor de Deep Learning (*Doctr*) apoyado en el patrón **"Bolsa de Palabras" (Bag of Words)** y **rotación heurística**, haciéndolo agnóstico a la versión del documento y robusto ante fotos mal orientadas o formatos estructurados antiguos.
+Acondicionamiento Dinámico: Una capa previa de Auto-Crop inteligente diseñada para evitar la fragmentación de bordes típica de las cámaras móviles y aislar el soporte físico del ruido ambiental.
+
+Extracción Híbrida Dirigida: Uso de PassportEye (visión morfológica) para localizar y leer la zona MRZ con extrema precisión bajo el estándar ICAO, combinado con docTR (Deep Learning) para lidiar con las tipografías variables y posiciones desestructuradas del anverso.
+
+Módulo "El Cirujano" (Recuperación de Señal): El corazón matemático del sistema. Repara alucinaciones del OCR aplicando heurísticas avanzadas: máscaras bidireccionales para colisiones isomórficas (confundir 'O' con '0'), limpieza de padding y, sobre todo, recuperación matemática de dígitos corruptos aplicando la matriz de pesos ICAO (7-3-1).
+
+Validación Cruzada y Reglas de Negocio: Un enrutador audita los datos cruzando el JSON del reverso contra el texto crudo del anverso usando el modelo "Bag of Words" con rotación heurística (0º, 90º, -90º). Además, aplica validación criptográfica (Módulo 23 del DNI español) y prevención de fraude cronológico.
+
+El Puente Biométrico: Extracción automatizada del rostro del titular mediante Haar Cascades con auto-recorte dinámico (+20px de padding). El pipeline entrega un payload completo (JSON auditado + Crop Facial) listo para la validación biométrica 1:1 (Face Match).
 
 ## 🏆 Resultados y Robustez: Preparado para el Mundo Real
 
